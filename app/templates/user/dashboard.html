@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">My Dashboard</h1>
+    
+    <!-- Usage Summary -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Total Data Usage</h5>
+            <h2 class="card-text">{{ "%.2f"|format(total_usage/1024) }} GB</h2>
+        </div>
+    </div>
+
+    <!-- Usage Graph -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Your Network Usage</h5>
+            <div id="usageChart"></div>
+        </div>
+    </div>
+
+    <!-- Recent Connections -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Recent Connections</h5>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Data Used</th>
+                            <th>Connection Time</th>
+                            <th>IP Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for conn in recent_connections %}
+                        <tr>
+                            <td>{{ conn.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                            <td>{{ "%.2f"|format(conn.data_used) }} MB</td>
+                            <td>{{ conn.connection_time }} minutes</td>
+                            <td>{{ conn.ip_address }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Network Usage Chart
+    const dates = {{ dates|safe }};
+    const values = {{ values|safe }};
+    
+    const usageTrace = {
+        x: dates,
+        y: values,
+        type: 'scatter',
+        mode: 'lines+markers',
+        name: 'Data Usage (MB)'
+    };
+    
+    const usageLayout = {
+        title: 'Your Daily Network Usage',
+        xaxis: { title: 'Date' },
+        yaxis: { title: 'Data Usage (MB)' }
+    };
+    
+    Plotly.newPlot('usageChart', [usageTrace], usageLayout);
+</script>
+{% endblock %}

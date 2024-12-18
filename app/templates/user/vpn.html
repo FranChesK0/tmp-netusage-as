@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">VPN Settings</h1>
+    
+    <!-- VPN Status -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">VPN Connection Status</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>VPN Key:</strong> {{ current_user.vpn_key or 'Not Set' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VPN Configuration -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">VPN Configuration</h5>
+            <div class="mb-4">
+                <h6>Connection Details</h6>
+                <p><strong>Server:</strong> vpn.networkusage.com</p>
+                <p><strong>Port:</strong> 1194</p>
+                <p><strong>Protocol:</strong> UDP</p>
+            </div>
+            
+            <div class="mb-4">
+                <h6>Download Configuration</h6>
+                <p>Download your personalized OpenVPN configuration file:</p>
+                <a href="#" class="btn btn-primary">Download Config File</a>
+            </div>
+
+            <div class="mb-4">
+                <h6>Connection Instructions</h6>
+                <ol>
+                    <li>Download and install OpenVPN from <a href="https://openvpn.net/community-downloads/" target="_blank">here</a></li>
+                    <li>Download your configuration file using the button above</li>
+                    <li>Import the configuration file into your OpenVPN client</li>
+                    <li>Connect using your NetworkUsage credentials</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Usage History -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Connection History</h5>
+            <div id="connectionHistory"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Fetch and display connection history
+    fetch('/user/api/usage_history')
+        .then(response => response.json())
+        .then(data => {
+            const table = document.createElement('table');
+            table.className = 'table';
+            
+            // Create header
+            const thead = document.createElement('thead');
+            thead.innerHTML = `
+                <tr>
+                    <th>Date</th>
+                    <th>Data Used</th>
+                    <th>Connection Time</th>
+                </tr>
+            `;
+            table.appendChild(thead);
+            
+            // Create body
+            const tbody = document.createElement('tbody');
+            data.forEach(record => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record.timestamp}</td>
+                    <td>${record.data_used.toFixed(2)} MB</td>
+                    <td>${record.connection_time} minutes</td>
+                `;
+                tbody.appendChild(row);
+            });
+            table.appendChild(tbody);
+            
+            document.getElementById('connectionHistory').appendChild(table);
+        });
+</script>
+{% endblock %}

@@ -1,0 +1,5 @@
+SELECT * FROM user WHERE username='Александр';
+
+(5, 'Александр', 'testemail@example.com', 'scrypt:32768:8:1$x7oAIYSezbIcYEin$e90a2ba41fa5449589836033f1427ad604bed56b1ba262e552756884ecb49c3c41f1d6d3d142f00a0390cfeb9f205f132501a34b58352fa61721a662e242a724', 0, None)
+
+
