@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, PasswordField, StringField, SubmitField
+from wtforms import BooleanField, DateField, PasswordField, StringField, SubmitField
 from wtforms.validators import DataRequired, Email, ValidationError
 
 from app.models import User
@@ -21,3 +21,9 @@ class UserForm(FlaskForm):
         user = User.query.filter_by(email=field.data).first()
         if user is not None:
             raise ValidationError("Используйте другой адрес почты.")
+
+
+class DateForm(FlaskForm):
+    start = DateField("От", validators=[DataRequired()])
+    end = DateField("До", validators=[DataRequired()])
+    submit = SubmitField("Загрузить")

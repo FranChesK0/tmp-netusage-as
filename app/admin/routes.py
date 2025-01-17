@@ -1,5 +1,5 @@
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, time
 from functools import wraps
 
 from flask import flash, jsonify, redirect, render_template, request, url_for
@@ -7,7 +7,7 @@ from flask_login import current_user, login_required
 
 from app import db
 from app.admin import bp
-from app.admin.forms import UserForm
+from app.admin.forms import DateForm, UserForm
 from app.models import UsageRecord, User
 
 
@@ -22,38 +22,55 @@ def admin_required(f):
     return decorated_function
 
 
-@bp.route("/dashboard")
+@bp.route("/dashboard", methods=["GET", "POST"])
 @login_required
 @admin_required
 def dashboard():
+    form = DateForm()
     total_users = User.query.count()
     total_usage = db.session.query(db.func.sum(UsageRecord.data_used)).scalar() or 0
 
-    # Get usage data for the graph
-    end_date = datetime.now()
-    start_date = end_date - timedelta(days=30)
+    if form.validate_on_submit():
+        # Get usage data for the graph
+        # end_date = datetime.now()
+        # start_date = end_date - timedelta(days=30)
+        start_date = datetime.combine(form.start.data, time())
+        end_date = datetime.combine(form.end.data, time())
 
-    usage_data = (
-        db.session.query(
-            db.func.date(UsageRecord.timestamp).label("date"),
-            db.func.sum(UsageRecord.data_used).label("total_data"),
+        usage_data = (
+            db.session.query(
+                db.func.date(UsageRecord.timestamp).label("date"),
+                db.func.sum(UsageRecord.data_used).label("total_data"),
+            )
+            .filter(
+                UsageRecord.timestamp >= start_date, UsageRecord.timestamp <= end_date
+            )
+            .group_by(db.func.date(UsageRecord.timestamp))
+            .order_by("date")
+            .all()
         )
-        .filter(UsageRecord.timestamp >= start_date, UsageRecord.timestamp <= end_date)
-        .group_by(db.func.date(UsageRecord.timestamp))
-        .order_by("date")
-        .all()
-    )
 
-    dates = [str(record.date) for record in usage_data]
-    values = [float(record.total_data) for record in usage_data]
+        dates = [str(record.date) for record in usage_data]
+        values = [float(record.total_data) for record in usage_data]
+
+        return render_template(
+            "admin/dashboard.html",
+            title="Анализ Трафика",
+            total_users=total_users,
+            total_usage=total_usage,
+            dates=json.dumps(dates),
+            values=json.dumps(values),
+            form=form,
+        )
 
     return render_template(
         "admin/dashboard.html",
         title="Анализ Трафика",
         total_users=total_users,
         total_usage=total_usage,
-        dates=json.dumps(dates),
-        values=json.dumps(values),
+        dates=json.dumps(None),
+        values=json.dumps(None),
+        form=form,
     )
 
 

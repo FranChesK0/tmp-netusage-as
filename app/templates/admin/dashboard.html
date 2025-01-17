@@ -34,6 +34,26 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Использование Сети за период</h5>
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        <div class="mb-3">
+                            {{ form.start.label(class="form-label") }}
+                            {{ form.start(class="form-control") }}
+                            {% for error in form.start.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.end.label(class="form-label") }}
+                            {{ form.end(class="form-control") }}
+                            {% for error in form.end.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
                     <div id="usageChart"></div>
                 </div>
             </div>
@@ -55,22 +75,24 @@
     // Network Usage Over Time Chart
     const dates = {{ dates|safe }};
     const values = {{ values|safe }};
-    
-    const usageTrace = {
-        x: dates,
-        y: values,
-        type: 'scatter',
-        mode: 'lines+markers',
-        name: 'Использование Сети (МБ)'
+
+    if (dates && values) {
+        const usageTrace = {
+            x: dates,
+            y: values,
+            type: 'scatter',
+            mode: 'lines+markers',
+            name: 'Использование Сети (МБ)'
+        };
+        
+        const usageLayout = {
+            title: 'Daily Network Usage',
+            xaxis: { title: 'Дата' },
+            yaxis: { title: 'Использование Сети (МБ)' }
+        };
+        
+        Plotly.newPlot('usageChart', [usageTrace], usageLayout);
     };
-    
-    const usageLayout = {
-        title: 'Daily Network Usage',
-        xaxis: { title: 'Дата' },
-        yaxis: { title: 'Использование Сети (МБ)' }
-    };
-    
-    Plotly.newPlot('usageChart', [usageTrace], usageLayout);
 
     // Top Users Chart
     fetch('/admin/api/usage_stats')
