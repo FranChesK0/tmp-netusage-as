@@ -20,17 +20,17 @@
                     {% if current_user.is_authenticated %}
                         {% if current_user.is_admin %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+                                <a class="nav-link" href="{{ url_for('admin.dashboard') }}">Анализ Трафика</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('admin.users') }}">Manage Users</a>
+                                <a class="nav-link" href="{{ url_for('admin.users') }}">Управление Пользователями</a>
                             </li>
                         {% else %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('user.dashboard') }}">Dashboard</a>
+                                <a class="nav-link" href="{{ url_for('user.dashboard') }}">Анализ Трафика</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('user.vpn') }}">VPN Settings</a>
+                                <a class="nav-link" href="{{ url_for('user.vpn') }}">Настройки</a>
                             </li>
                         {% endif %}
                     {% endif %}
@@ -38,14 +38,14 @@
                 <ul class="navbar-nav">
                     {% if current_user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+                            <a class="nav-link" href="{{ url_for('auth.logout') }}">Выйти</a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+                            <a class="nav-link" href="{{ url_for('auth.login') }}">Войти</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
+                            <a class="nav-link" href="{{ url_for('auth.register') }}">Зарегестрироваться</a>
                         </li>
                     {% endif %}
                 </ul>

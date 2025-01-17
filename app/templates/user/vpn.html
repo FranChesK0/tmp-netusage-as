@@ -2,15 +2,15 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="mb-4">VPN Settings</h1>
+    <h1 class="mb-4">Настройки</h1>
     
     <!-- VPN Status -->
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title">VPN Connection Status</h5>
+            <h5 class="card-title">Статус подключения</h5>
             <div class="row">
                 <div class="col-md-6">
-                    <p><strong>VPN Key:</strong> {{ current_user.vpn_key or 'Not Set' }}</p>
+                    <p><strong>Ключ подключения:</strong> {{ current_user.vpn_key or 'Не выдан' }}</p>
                 </div>
             </div>
         </div>
@@ -19,27 +19,27 @@
     <!-- VPN Configuration -->
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title">VPN Configuration</h5>
+            <h5 class="card-title">Конфигурация</h5>
             <div class="mb-4">
-                <h6>Connection Details</h6>
-                <p><strong>Server:</strong> vpn.networkusage.com</p>
-                <p><strong>Port:</strong> 1194</p>
-                <p><strong>Protocol:</strong> UDP</p>
+                <h6>Данные Подключения</h6>
+                <p><strong>Сервер:</strong> net.networkusage.com</p>
+                <p><strong>Порт:</strong> 1194</p>
+                <p><strong>Протокол:</strong> UDP</p>
             </div>
             
             <div class="mb-4">
-                <h6>Download Configuration</h6>
-                <p>Download your personalized OpenVPN configuration file:</p>
-                <a href="#" class="btn btn-primary">Download Config File</a>
+                <h6>Загрузить Конфигурацию</h6>
+                <p>Загрузить личный файл конфигурации:</p>
+                <a href="#" class="btn btn-primary">Загрузить файл конфигурации</a>
             </div>
 
             <div class="mb-4">
                 <h6>Connection Instructions</h6>
                 <ol>
-                    <li>Download and install OpenVPN from <a href="https://openvpn.net/community-downloads/" target="_blank">here</a></li>
-                    <li>Download your configuration file using the button above</li>
-                    <li>Import the configuration file into your OpenVPN client</li>
-                    <li>Connect using your NetworkUsage credentials</li>
+                    <li>Загрузить и установить <a href="https://openvpn.net/community-downloads/" target="_blank">OpenVPN</a></li>
+                    <li>Загрузить ваш файл конфигурации, используя кнопку выше</li>
+                    <li>Импортировать файл конфигурации в клиенте</li>
+                    <li>Подключиться используюя ваши личные данные для подключения</li>
                 </ol>
             </div>
         </div>
@@ -48,7 +48,7 @@
     <!-- Usage History -->
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Connection History</h5>
+            <h5 class="card-title">История Подключений</h5>
             <div id="connectionHistory"></div>
         </div>
     </div>
@@ -68,9 +68,9 @@
             const thead = document.createElement('thead');
             thead.innerHTML = `
                 <tr>
-                    <th>Date</th>
-                    <th>Data Used</th>
-                    <th>Connection Time</th>
+                    <th>Дата</th>
+                    <th>Данных использовано</th>
+                    <th>Время подключения</th>
                 </tr>
             `;
             table.appendChild(thead);
@@ -81,8 +81,8 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${record.timestamp}</td>
-                    <td>${record.data_used.toFixed(2)} MB</td>
-                    <td>${record.connection_time} minutes</td>
+                    <td>${record.data_used.toFixed(2)} МБ</td>
+                    <td>${record.connection_time} минут</td>
                 `;
                 tbody.appendChild(row);
             });
